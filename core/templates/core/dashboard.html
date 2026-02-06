@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel CRAS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f2f6fa;
+            padding: 30px;
+        }
+
+        .panel {
+            background: #ffffff;
+            max-width: 1000px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            color: #0f4c75;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .actions {
+            margin-bottom: 25px;
+        }
+
+        .actions a {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #0f4c75;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .actions a:hover {
+            background: #3282b8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background: #0f4c75;
+            color: #fff;
+        }
+
+        table tr:hover {
+            background: #f1f1f1;
+        }
+
+        /* BOTÃO REDONDO */
+        .btn-cesta {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #28a745;
+            color: white;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-cesta.disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .logout {
+            margin-top: 25px;
+        }
+
+        .logout button {
+            width: 100%;
+            padding: 12px;
+            background: #d9534f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* BARRA DE PESQUISA */
+        .search-form {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-form input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .search-form button {
+            padding: 10px 18px;
+            background: #0f4c75;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #d9534f;
+            font-weight: bold;
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="panel">
+    <h2>Painel do Sistema CRAS</h2>
+    <p>Bem-vindo ao sistema do CRAS.</p>
+
+    <div class="actions">
+        <a href="/cadastro/">Cadastrar Beneficiário</a>
+    </div>
+
+    <!-- BARRA DE PESQUISA -->
+    <form method="get" class="search-form">
+        <input type="text" name="q" placeholder="Buscar por nome ou CPF" value="{{ busca }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Qtd. Cestas (Ano)</th>
+            <th>Última Cesta</th>
+            <th>Ação</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if beneficiarios %}
+            {% for b in beneficiarios %}
+                {% with status=b.pode_receber_cesta %}
+                <tr>
+                    <td>
+                        <a href="{% url 'detalhe_beneficiario' b.id %}">
+                            {{ b.nome }}
+                        </a>
+                    </td>
+
+                    <td>{{ b.cpf }}</td>
+
+                    <td style="text-align:center; font-weight:bold;">
+                        {{ b.total_cestas_ano }}
+                    </td>
+
+                    <td>
+                        {% if b.data_ultima_cesta %}
+                            {{ b.data_ultima_cesta|date:"d/m/Y" }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td style="text-align:center;">
+                        <form method="post" action="{% url 'conceder_cesta' b.id %}">
+                            {% csrf_token %}
+                            {% if status.0 %}
+                                <button class="btn-cesta" title="Conceder cesta">+</button>
+                            {% else %}
+                                <button class="btn-cesta disabled" disabled title="{{ status.1 }}">+</button>
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+                {% endwith %}
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5" class="no-results">Nenhum beneficiário encontrado.</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    <div class="logout">
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Sair</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
