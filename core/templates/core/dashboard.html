@@ -139,6 +139,26 @@
             font-weight: bold;
             padding: 15px;
         }
+        /* BOTÃO EXCLUIR (LIXEIRA) */
+        .btn-delete {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #d9534f;
+            color: #fff;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: #c9302c;
+        }
+
     </style>
 </head>
 
@@ -192,7 +212,9 @@
                         {% endif %}
                     </td>
 
-                    <td style="text-align:center;">
+                    <td style="text-align:center; display:flex; gap:8px; justify-content:center;">
+    
+                        <!-- BOTÃO CONCEDER CESTA -->
                         <form method="post" action="{% url 'conceder_cesta' b.id %}">
                             {% csrf_token %}
                             {% if status.0 %}
@@ -201,7 +223,18 @@
                                 <button class="btn-cesta disabled" disabled title="{{ status.1 }}">+</button>
                             {% endif %}
                         </form>
+                    
+                        <!-- BOTÃO EXCLUIR -->
+                        <form method="post" action="{% url 'excluir_beneficiario' b.id %}"
+                              onsubmit="return confirm('Tem certeza que deseja excluir este beneficiário?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-delete" title="Excluir beneficiário">
+                                🗑️
+                            </button>
+                        </form>
+                    
                     </td>
+                    
                 </tr>
                 {% endwith %}
             {% endfor %}
