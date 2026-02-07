@@ -33,7 +33,7 @@ urlpatterns = [
     name='excluir_beneficiario'
 ),
 
-    path('', views.dashboard, name='dashboard'),
+       path('', views.dashboard, name='dashboard'),
     path('beneficiario/excluir/<int:beneficiario_id>/', views.excluir_beneficiario, name='excluir_beneficiario'),
     # outras rotas aqui
 
