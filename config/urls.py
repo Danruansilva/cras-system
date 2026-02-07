@@ -11,4 +11,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
+     path('admin/', admin.site.urls),
+    path('', include('core.urls')),  # ← só incluir APPs aqui
+    
 ]

@@ -214,7 +214,8 @@
                             {% endif %}
                         </form>
 
-                        <form method="post" action="{% url 'excluir_beneficiario' b.id %}"
+                        <form method="post" action="{% url 'core:excluir_beneficiario' b.id %}">
+
                               onsubmit="return confirm('Tem certeza que deseja excluir este beneficiário?');">
                             {% csrf_token %}
                             <button type="submit" class="btn-delete" title="Excluir">🗑️</button>

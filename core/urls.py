@@ -2,6 +2,8 @@ from django.urls import path
 from django.urls import path, include
 from . import views
 
+app_name = 'core'
+
 urlpatterns = [
     # 🔑 LOGIN
     path('login/', views.home, name='login'),
@@ -31,6 +33,8 @@ urlpatterns = [
     name='excluir_beneficiario'
 ),
 
-
+    path('', views.dashboard, name='dashboard'),
+    path('beneficiario/excluir/<int:beneficiario_id>/', views.excluir_beneficiario, name='excluir_beneficiario'),
+    # outras rotas aqui
 
 ]
