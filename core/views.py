@@ -23,6 +23,11 @@ def home(request):
 
     return render(request, 'core/login.html', {'form': form})
 
+@login_required
+def excluir_beneficiario(request, beneficiario_id):
+    beneficiario = get_object_or_404(Beneficiario, id=beneficiario_id)
+    beneficiario.delete()
+    return redirect('dashboard')
 
 @login_required
 def cadastro_beneficiario(request):

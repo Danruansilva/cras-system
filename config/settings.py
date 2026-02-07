@@ -6,9 +6,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Segurança
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret")
-DEBUG = os.environ.get("DEBUG") == "True"
+DEBUG = True
 
-ALLOWED_HOSTS = [".onrender.com", "localhost", "127.0.0.1"]
+
+ALLOWED_HOSTS = ['*']
 
 
 # Aplicações
@@ -56,11 +57,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Banco de dados
 DATABASES = {
     "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        default=os.environ.get("DATABASE_URL"),
         conn_max_age=600,
-        ssl_require=False
+        ssl_require=True
     )
 }
+
 
 
 # Senhas
