@@ -1,13 +1,15 @@
 from pathlib import Path
 import os
 import dj_database_url
+from decouple import config
+import dj_database_url
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Segurança
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret")
-DEBUG = True
-
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
@@ -55,13 +57,29 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 # Banco de dados
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+# Banco de dados
+DATABASE_URL = config("DATABASE_URL", default=None)
+
+if DATABASE_URL:
+    # PRODUÇÃO (Render - PostgreSQL)
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    # DESENVOLVIMENTO LOCAL (SQLite)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+
+
+
 
 
 
