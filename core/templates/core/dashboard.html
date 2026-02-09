@@ -55,7 +55,6 @@
             background: #3282b8;
         }
 
-        /* BARRA DE PESQUISA */
         .search-form {
             margin-bottom: 20px;
             display: flex;
@@ -99,14 +98,12 @@
             background: #f1f1f1;
         }
 
-        /* COLUNA DE AÇÕES */
         .actions-cell {
             display: flex;
             justify-content: center;
             gap: 8px;
         }
 
-        /* BOTÃO CESTA */
         .btn-cesta {
             width: 42px;
             height: 42px;
@@ -123,7 +120,6 @@
             cursor: not-allowed;
         }
 
-        /* BOTÃO EXCLUIR */
         .btn-delete {
             width: 42px;
             height: 42px;
@@ -169,7 +165,7 @@
     <p>Bem-vindo ao sistema do CRAS.</p>
 
     <div class="actions">
-        <a href="/cadastro/">Cadastrar Beneficiário</a>
+        <a href="{% url 'core:cadastro' %}">Cadastrar Beneficiário</a>
     </div>
 
     <form method="get" class="search-form">
@@ -193,7 +189,9 @@
             {% with status=b.pode_receber_cesta %}
             <tr>
                 <td>
-                    {% url 'core:detalhe_beneficiario' b.id %}
+                    <a href="{% url 'core:detalhe_beneficiario' b.id %}">
+                        {{ b.nome }}
+                    </a>
                 </td>
                 <td>{{ b.cpf }}</td>
                 <td style="text-align:center; font-weight:bold;">
@@ -205,7 +203,7 @@
                 <td>
                     <div class="actions-cell">
 
-                        <form method="post" action="{% url 'conceder_cesta' b.id %}">
+                        <form method="post" action="{% url 'core:conceder_cesta' b.id %}">
                             {% csrf_token %}
                             {% if status.0 %}
                                 <button type="submit" class="btn-cesta" title="Conceder cesta">+</button>
@@ -214,8 +212,8 @@
                             {% endif %}
                         </form>
 
-                        <form method="post" action="{% url 'core:excluir_beneficiario' b.id %}">
-
+                        <form method="post"
+                              action="{% url 'core:excluir_beneficiario' b.id %}"
                               onsubmit="return confirm('Tem certeza que deseja excluir este beneficiário?');">
                             {% csrf_token %}
                             <button type="submit" class="btn-delete" title="Excluir">🗑️</button>
@@ -235,11 +233,10 @@
     </table>
 
     <div class="logout">
-        <form method="post" action="{% url 'logout' %}">
+        <form method="post" action="{% url 'core:logout' %}">
             {% csrf_token %}
             <button type="submit">Sair</button>
         </form>
-        
     </div>
 </div>
 </body>
