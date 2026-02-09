@@ -10,5 +10,6 @@ urlpatterns = [
     path('conceder-cesta/<int:beneficiario_id>/', views.conceder_cesta, name='conceder_cesta'),
     path('beneficiario/<int:beneficiario_id>/', views.detalhe_beneficiario, name='detalhe_beneficiario'),
     path('logout/', views.logout_view, name='logout'),
+,
     path('excluir/<int:id>/', views.excluir_beneficiario, name='excluir_beneficiario'),
 ]

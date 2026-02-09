@@ -1,6 +1,7 @@
-from django.urls import path
-from .views import home
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('admin/', admin.site.urls),
+    path('', include('core.urls')),  # 👈 manda para o app core
 ]
