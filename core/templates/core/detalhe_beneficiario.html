@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Detalhes do Beneficiário</title>
-    
 
     <style>
         * {
@@ -24,20 +23,20 @@
         .card {
             background: #ffffff;
             width: 100%;
-            max-width: 550px;
+            max-width: 600px;
             padding: 35px;
             border-radius: 10px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
-        h2 {
+        h2, h3 {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             color: #0f4c75;
         }
 
         .info {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             font-size: 15px;
             color: #333;
         }
@@ -54,9 +53,25 @@
             margin: 25px 0;
         }
 
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+            font-size: 14px;
+        }
+
+        .highlight {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
         .back {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         .back a {
@@ -73,50 +88,65 @@
         .back a:hover {
             background: #3282b8;
         }
-
-        .highlight {
-            color: #d9534f;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2>Dados do Beneficiário</h2>
+<div class="card">
+    <h2>Dados do Beneficiário</h2>
 
-        <div class="info">
-            <strong>Nome:</strong> {{ beneficiario.nome }}
-        </div>
+    <div class="info">
+        <strong>Nome:</strong> {{ beneficiario.nome }}
+    </div>
 
-        <div class="info">
-            <strong>CPF:</strong> {{ beneficiario.cpf }}
-        </div>
+    <div class="info">
+        <strong>CPF:</strong> {{ beneficiario.cpf }}
+    </div>
 
-        <div class="info">
-            <strong>RG:</strong> {{ beneficiario.rg }}
-        </div>
+    <div class="info">
+        <strong>RG:</strong> {{ beneficiario.rg }}
+    </div>
 
-        <div class="info">
-            <strong>Endereço:</strong> {{ beneficiario.endereco }}
-        </div>
+    <div class="info">
+        <strong>Endereço:</strong> {{ beneficiario.endereco }}
+    </div>
 
-        <div class="divider"></div>
+    <div class="divider"></div>
 
-        <div class="info">
-            <strong>Última cesta:</strong>
-            {% if beneficiario.data_ultima_cesta %}
-                {{ beneficiario.data_ultima_cesta|date:"d/m/Y" }}
+    <!-- ÚLTIMA CESTA (CORRIGIDO) -->
+    <div class="info">
+        <strong>Última cesta:</strong>
+        {% with beneficiario.cestas.last as ultima %}
+            {% if ultima %}
+                {{ ultima.data_concessao|date:"d/m/Y" }}
             {% else %}
                 <span class="highlight">Nenhuma</span>
             {% endif %}
-        </div>
-        <div class="divider"></div>
+        {% endwith %}
+    </div>
 
-        <div class="info">
-            <strong>Documento anexado:</strong>
-        
-            {% if beneficiario.documento_foto %}
+    <div class="divider"></div>
+
+    <!-- LISTA DE CESTAS -->
+    <h3>Histórico de Cestas</h3>
+
+    {% if beneficiario.cestas.exists %}
+        <ul>
+            {% for cesta in beneficiario.cestas.all %}
+                <li>📦 Cesta recebida em <strong>{{ cesta.data_concessao|date:"d/m/Y" }}</strong></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="highlight">Nenhuma cesta recebida ainda.</p>
+    {% endif %}
+
+    <div class="divider"></div>
+
+    <!-- DOCUMENTO -->
+    <div class="info">
+        <strong>Documento anexado:</strong><br><br>
+
+        {% if beneficiario.documento_foto %}
             {% if ".pdf" in beneficiario.documento_foto.url %}
                 <a href="{{ beneficiario.documento_foto.url }}" target="_blank">
                     📄 Abrir PDF
@@ -126,17 +156,14 @@
                      style="max-width:100%; border-radius:8px;">
             {% endif %}
         {% else %}
-            <p>Sem documento anexado</p>
+            <span class="highlight">Sem documento anexado</span>
         {% endif %}
-        
-        </div>
-        
-
-
-        <div class="back">
-            <a href="{% url 'dashboard' %}">⬅ Voltar</a>
-        </div>
     </div>
+
+    <div class="back">
+        <a href="{% url 'core:dashboard' %}">⬅ Voltar</a>
+    </div>
+</div>
 
 </body>
 </html>

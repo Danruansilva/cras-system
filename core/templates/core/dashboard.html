@@ -162,7 +162,7 @@
 <body>
 <div class="panel">
     <h2>Painel de Gerenciamento de Cestas</h2>
-    <p>Bem-vindo ao sistema do CRAS.</p>
+    <p>Bem-vindo ao sistema de gestão.</p>
 
     <div class="actions">
         <a href="{% url 'core:cadastro' %}">Cadastrar Beneficiário</a>
@@ -178,7 +178,7 @@
         <tr>
             <th>Nome</th>
             <th>CPF</th>
-            <th>Qtd. Cestas (Ano)</th>
+            <th style="text-align:center;">Qtd. Cestas</th>
             <th>Última Cesta</th>
             <th style="text-align:center;">Ações</th>
         </tr>
@@ -186,49 +186,57 @@
         <tbody>
         {% if beneficiarios %}
             {% for b in beneficiarios %}
-            {% with status=b.pode_receber_cesta %}
-            <tr>
-                <td>
-                    <a href="{% url 'core:detalhe_beneficiario' b.id %}">
-                        {{ b.nome }}
-                    </a>
-                </td>
-                <td>{{ b.cpf }}</td>
-                <td style="text-align:center; font-weight:bold;">
-                    {{ b.total_cestas_calc }}
+                {% with status=b.pode_receber_cesta %}
+                <tr>
+                    <td>
+                        <a href="{% url 'core:detalhe_beneficiario' b.id %}">
+                            {{ b.nome }}
+                        </a>
+                    </td>
 
+                    <td>{{ b.cpf }}</td>
 
-                </td>
-                <td>
-                    {{ b.data_ultima_cesta|date:"d/m/Y"|default:"—" }}
-                </td>
-                <td>
-                    <div class="actions-cell">
+                    <td style="text-align:center; font-weight:bold;">
+                        {{ b.total_cestas_calc }}
+                    </td>
 
-                        <form method="post" action="{% url 'core:conceder_cesta' b.id %}">
-                            {% csrf_token %}
-                            {% if status.0 %}
-                                <button type="submit" class="btn-cesta" title="Conceder cesta">+</button>
-                            {% else %}
-                                <button class="btn-cesta disabled" disabled title="{{ status.1 }}">+</button>
-                            {% endif %}
-                        </form>
+                    <td>
+                        {% if b.data_ultima_cesta %}
+                            {{ b.data_ultima_cesta|date:"d/m/Y" }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
 
-                        <form method="post"
-                              action="{% url 'core:excluir_beneficiario' b.id %}"
-                              onsubmit="return confirm('Tem certeza que deseja excluir este beneficiário?');">
-                            {% csrf_token %}
-                            <button type="submit" class="btn-delete" title="Excluir">🗑️</button>
-                        </form>
+                    <td>
+                        <div class="actions-cell">
 
-                    </div>
-                </td>
-            </tr>
-            {% endwith %}
+                            <form method="post" action="{% url 'core:conceder_cesta' b.id %}">
+                                {% csrf_token %}
+                                {% if status.0 %}
+                                    <button type="submit" class="btn-cesta" title="Conceder cesta">+</button>
+                                {% else %}
+                                    <button class="btn-cesta disabled" disabled title="{{ status.1 }}">+</button>
+                                {% endif %}
+                            </form>
+
+                            <form method="post"
+                                  action="{% url 'core:excluir_beneficiario' b.id %}"
+                                  onsubmit="return confirm('Tem certeza que deseja excluir este beneficiário?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-delete" title="Excluir">🗑️</button>
+                            </form>
+
+                        </div>
+                    </td>
+                </tr>
+                {% endwith %}
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="5" class="no-results">Nenhum beneficiário encontrado.</td>
+                <td colspan="5" class="no-results">
+                    Nenhum beneficiário encontrado.
+                </td>
             </tr>
         {% endif %}
         </tbody>

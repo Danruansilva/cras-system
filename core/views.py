@@ -4,13 +4,12 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.db import IntegrityError
-from django.db.models import Q, Count
+from django.db.models import Count, Max, Q
 
-from .models import Beneficiario
+from .models import Beneficiario, Cesta
 
 
 def home(request):
-    """Tela de login"""
     if request.user.is_authenticated:
         return redirect('core:dashboard')
 
@@ -23,25 +22,26 @@ def home(request):
     return render(request, 'core/login.html', {'form': form})
 
 
+
 @login_required
 def dashboard(request):
     busca = request.GET.get('q', '')
 
     beneficiarios = Beneficiario.objects.annotate(
-        total_cestas_calc=Count('cestas')
-    )
+        total_cestas_calc=Count('cestas'),
+        data_ultima_cesta=Max('cestas__data_concessao')
+    ).order_by('nome')
 
     if busca:
         beneficiarios = beneficiarios.filter(
-            Q(nome__icontains=busca) | Q(cpf__icontains=busca)
+            Q(nome__icontains=busca) |
+            Q(cpf__icontains=busca)
         )
 
-    context = {
+    return render(request, 'core/dashboard.html', {
         'beneficiarios': beneficiarios,
         'busca': busca,
-    }
-
-    return render(request, 'core/dashboard.html', context)
+    })
 
 
 
@@ -55,7 +55,6 @@ def cadastro_beneficiario(request):
 
         recebe_beneficio = request.POST.get('recebe_beneficio') == 'sim'
         qual_beneficio = request.POST.get('qual_beneficio')
-
         documento_foto = request.FILES.get('documento_foto')
 
         try:
@@ -68,7 +67,6 @@ def cadastro_beneficiario(request):
                 qual_beneficio=qual_beneficio if recebe_beneficio else None,
                 documento_foto=documento_foto
             )
-
             messages.success(request, 'Beneficiário cadastrado com sucesso!')
             return redirect('core:dashboard')
 
@@ -79,7 +77,14 @@ def cadastro_beneficiario(request):
 
 
 @login_required
+
+
+
+@login_required
 def conceder_cesta(request, beneficiario_id):
+    if request.method != 'POST':
+        return redirect('core:dashboard')
+
     beneficiario = get_object_or_404(Beneficiario, id=beneficiario_id)
 
     pode, msg = beneficiario.pode_receber_cesta()
@@ -91,6 +96,8 @@ def conceder_cesta(request, beneficiario_id):
         messages.error(request, msg)
 
     return redirect('core:dashboard')
+
+
 
 
 @login_required
@@ -105,6 +112,8 @@ def excluir_beneficiario(request, beneficiario_id):
 def detalhe_beneficiario(request, beneficiario_id):
     beneficiario = get_object_or_404(Beneficiario, id=beneficiario_id)
 
+    cestas = beneficiario.cestas.order_by('-data_concessao')
+
     is_pdf = False
     if beneficiario.documento_foto:
         is_pdf = beneficiario.documento_foto.name.lower().endswith('.pdf')
@@ -114,9 +123,12 @@ def detalhe_beneficiario(request, beneficiario_id):
         'core/detalhe_beneficiario.html',
         {
             'beneficiario': beneficiario,
+            'cestas': cestas,
             'is_pdf': is_pdf
         }
     )
+
+
 
 
 @login_required
