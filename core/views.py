@@ -8,7 +8,9 @@ from django.urls import reverse
 from django.db import IntegrityError
 from django.db.models import Q, Count
 from .models import Beneficiario
-
+from django.http import HttpResponse
+def home(request):
+    return HttpResponse("Sistema CRAS está online 🚀")
 
 def home(request):
     """Tela de login"""

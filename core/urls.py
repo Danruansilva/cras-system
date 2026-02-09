@@ -4,7 +4,7 @@ from . import views
 app_name = 'core'
 
 urlpatterns = [
-    path('login/', views.home, name='login'),
+    path('login/', views.home, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('cadastro/', views.cadastro_beneficiario, name='cadastro'),
     path('conceder-cesta/<int:beneficiario_id>/', views.conceder_cesta, name='conceder_cesta'),
