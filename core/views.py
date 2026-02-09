@@ -15,13 +15,15 @@ def home(request):
 def home(request):
     """Tela de login"""
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        return redirect('core:dashboard')
+
 
     form = AuthenticationForm(request, data=request.POST or None)
 
     if request.method == 'POST' and form.is_valid():
         login(request, form.get_user())
-        return redirect('dashboard')
+        return redirect('core:dashboard')
+
 
     return render(request, 'core/login.html', {'form': form})
 
@@ -29,7 +31,8 @@ def home(request):
 def excluir_beneficiario(request, beneficiario_id):
     beneficiario = get_object_or_404(Beneficiario, id=beneficiario_id)
     beneficiario.delete()
-    return redirect('dashboard')
+    return redirect('core:dashboard')
+
 
 @login_required
 def cadastro_beneficiario(request):
