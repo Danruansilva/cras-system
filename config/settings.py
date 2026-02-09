@@ -1,6 +1,3 @@
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
 
 from pathlib import Path
 import os
