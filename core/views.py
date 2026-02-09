@@ -50,19 +50,37 @@ def dashboard(request):
 
 @login_required
 def cadastro_beneficiario(request):
-    """Cadastrar novo beneficiário"""
     if request.method == 'POST':
         nome = request.POST.get('nome')
         cpf = request.POST.get('cpf')
+        rg = request.POST.get('rg')
+        endereco = request.POST.get('endereco')
+
+        recebe_beneficio = request.POST.get('recebe_beneficio') == 'sim'
+        qual_beneficio = request.POST.get('qual_beneficio')
+
+        documento_foto = request.FILES.get('documento_foto')
 
         try:
-            Beneficiario.objects.create(nome=nome, cpf=cpf)
+            Beneficiario.objects.create(
+                nome=nome,
+                cpf=cpf,
+                rg=rg,
+                endereco=endereco,
+                recebe_beneficio=recebe_beneficio,
+                qual_beneficio=qual_beneficio if recebe_beneficio else None,
+                documento_foto=documento_foto
+            )
+
             messages.success(request, 'Beneficiário cadastrado com sucesso!')
             return redirect('core:dashboard')
+
         except IntegrityError:
             messages.error(request, 'Este CPF já está cadastrado.')
 
     return render(request, 'core/cadastro.html')
+
+
 
 
 @login_required
@@ -92,11 +110,20 @@ def excluir_beneficiario(request, beneficiario_id):
 @login_required
 def detalhe_beneficiario(request, beneficiario_id):
     beneficiario = get_object_or_404(Beneficiario, id=beneficiario_id)
+
+    is_pdf = False
+    if beneficiario.documento_foto:
+        is_pdf = beneficiario.documento_foto.name.lower().endswith('.pdf')
+
     return render(
         request,
         'core/detalhe_beneficiario.html',
-        {'beneficiario': beneficiario}
+        {
+            'beneficiario': beneficiario,
+            'is_pdf': is_pdf
+        }
     )
+
 
 
 @login_required

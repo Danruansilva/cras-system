@@ -111,6 +111,27 @@
                 <span class="highlight">Nenhuma</span>
             {% endif %}
         </div>
+        <div class="divider"></div>
+
+        <div class="info">
+            <strong>Documento anexado:</strong>
+        
+            {% if beneficiario.documento_foto %}
+            {% if ".pdf" in beneficiario.documento_foto.url %}
+                <a href="{{ beneficiario.documento_foto.url }}" target="_blank">
+                    📄 Abrir PDF
+                </a>
+            {% else %}
+                <img src="{{ beneficiario.documento_foto.url }}"
+                     style="max-width:100%; border-radius:8px;">
+            {% endif %}
+        {% else %}
+            <p>Sem documento anexado</p>
+        {% endif %}
+        
+        </div>
+        
+
 
         <div class="back">
             <a href="{% url 'dashboard' %}">⬅ Voltar</a>

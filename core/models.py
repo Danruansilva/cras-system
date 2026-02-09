@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from cloudinary.models import CloudinaryField
 
 
 class Beneficiario(models.Model):
@@ -7,6 +8,12 @@ class Beneficiario(models.Model):
     cpf = models.CharField(max_length=14, unique=True)
     rg = models.CharField(max_length=20)
     endereco = models.CharField(max_length=255)
+
+    documento_foto = CloudinaryField(
+        "Documento",
+        resource_type="auto",
+        blank=True,
+        null=True)
 
     recebe_beneficio = models.BooleanField(default=False)
     qual_beneficio = models.CharField(max_length=150, blank=True, null=True)
