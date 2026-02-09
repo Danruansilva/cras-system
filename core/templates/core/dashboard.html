@@ -193,7 +193,7 @@
             {% with status=b.pode_receber_cesta %}
             <tr>
                 <td>
-                    <a href="{% url 'detalhe_beneficiario' b.id %}">{{ b.nome }}</a>
+                    {% url 'core:detalhe_beneficiario' b.id %}
                 </td>
                 <td>{{ b.cpf }}</td>
                 <td style="text-align:center; font-weight:bold;">
