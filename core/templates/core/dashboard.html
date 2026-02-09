@@ -195,7 +195,8 @@
                 </td>
                 <td>{{ b.cpf }}</td>
                 <td style="text-align:center; font-weight:bold;">
-                    {{ b.total_cestas_ano }}
+                    {{ beneficiario.total_cestas_calc }}
+
                 </td>
                 <td>
                     {{ b.data_ultima_cesta|date:"d/m/Y"|default:"—" }}

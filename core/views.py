@@ -30,8 +30,9 @@ def dashboard(request):
     busca = request.GET.get('q', '').strip()
 
     beneficiarios = Beneficiario.objects.annotate(
-        total_cestas_ano=Count('cestas')
-    )
+    total_cestas_calc=Count('cestas')
+)
+
 
     if busca:
         beneficiarios = beneficiarios.filter(
