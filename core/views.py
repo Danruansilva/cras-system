@@ -130,3 +130,8 @@ def detalhe_beneficiario(request, beneficiario_id):
 def logout_view(request):
     logout(request)
     return redirect('core:home')
+
+
+beneficiario = Beneficiario.objects.annotate(
+    total_cestas=Count("entregas")
+).get(id=id)
