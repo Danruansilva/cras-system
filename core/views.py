@@ -5,25 +5,29 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.db import IntegrityError
 from django.db.models import Count, Max, Q
-
+from django.shortcuts import redirect
 from .models import Beneficiario, Cesta
 
 
 def home(request):
     if request.user.is_authenticated:
-        return redirect('core:dashboard')
+        return redirect('dashboard')
+
+    if 'next' in request.GET:
+        messages.warning(request, "Faça login primeiro.")
 
     form = AuthenticationForm(request, data=request.POST or None)
 
     if request.method == 'POST' and form.is_valid():
         login(request, form.get_user())
-        return redirect('core:dashboard')
+        return redirect('dashboard')
 
     return render(request, 'core/login.html', {'form': form})
 
 
 
-@login_required
+
+@login_required(login_url='login')
 def dashboard(request):
     busca = request.GET.get('q', '')
 

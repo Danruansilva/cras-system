@@ -85,6 +85,14 @@
     </style>
 </head>
 <body>
+    {% if messages %}
+    {% for message in messages %}
+        <div style="color:red; margin-bottom:10px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
 
     <div class="login-container">
         <h2>Login</h2>

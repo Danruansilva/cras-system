@@ -114,9 +114,9 @@ MEDIA_URL = "/media/"
 
 
 # Login
-LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"
-LOGOUT_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/login/"
+
 
 # Segurança extra
 SECURE_BROWSER_XSS_FILTER = True

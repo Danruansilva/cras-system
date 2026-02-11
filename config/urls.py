@@ -9,11 +9,11 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('', views.home, name='home'),
+    path('', views.home, name='home'),  # Página inicial = login
     path('dashboard/', views.dashboard, name='dashboard'),
 
-    path('login/', auth_views.LoginView.as_view(template_name='core/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('login/', views.home, name='login'),
+    path('logout/', views.logout_view, name='logout'),
 
-     path('', include(('core.urls', 'core'), namespace='core')),
+    path('', include('core.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
