@@ -5,13 +5,12 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.db import IntegrityError
 from django.db.models import Count, Max, Q
-from django.shortcuts import redirect
 from .models import Beneficiario, Cesta
 
 
 def home(request):
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        return redirect('core:dashboard')
 
     if 'next' in request.GET:
         messages.warning(request, "Faça login primeiro.")
@@ -20,14 +19,12 @@ def home(request):
 
     if request.method == 'POST' and form.is_valid():
         login(request, form.get_user())
-        return redirect('dashboard')
+        return redirect('core:dashboard')
 
     return render(request, 'core/login.html', {'form': form})
 
 
-
-
-@login_required(login_url='login')
+@login_required(login_url='core:login')
 def dashboard(request):
     busca = request.GET.get('q', '')
 
@@ -48,8 +45,7 @@ def dashboard(request):
     })
 
 
-
-@login_required
+@login_required(login_url='core:login')
 def cadastro_beneficiario(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
@@ -80,11 +76,7 @@ def cadastro_beneficiario(request):
     return render(request, 'core/cadastro.html')
 
 
-@login_required
-
-
-
-@login_required
+@login_required(login_url='core:login')
 def conceder_cesta(request, beneficiario_id):
     if request.method != 'POST':
         return redirect('core:dashboard')
@@ -102,9 +94,7 @@ def conceder_cesta(request, beneficiario_id):
     return redirect('core:dashboard')
 
 
-
-
-@login_required
+@login_required(login_url='core:login')
 def excluir_beneficiario(request, beneficiario_id):
     beneficiario = get_object_or_404(Beneficiario, id=beneficiario_id)
     beneficiario.delete()
@@ -112,7 +102,7 @@ def excluir_beneficiario(request, beneficiario_id):
     return redirect('core:dashboard')
 
 
-@login_required
+@login_required(login_url='core:login')
 def detalhe_beneficiario(request, beneficiario_id):
     beneficiario = get_object_or_404(Beneficiario, id=beneficiario_id)
 
@@ -133,9 +123,7 @@ def detalhe_beneficiario(request, beneficiario_id):
     )
 
 
-
-
-@login_required
+@login_required(login_url='core:login')
 def logout_view(request):
     logout(request)
     return redirect('core:home')
