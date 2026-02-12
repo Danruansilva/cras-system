@@ -1,7 +1,6 @@
-from cloudinary_storage.storage import MediaCloudinaryStorage
 from django.db import models
-from django.utils import timezone
 from datetime import date
+from cloudinary.models import CloudinaryField
 
 
 class Beneficiario(models.Model):
@@ -11,14 +10,15 @@ class Beneficiario(models.Model):
     endereco = models.CharField(max_length=255)
 
     recebe_beneficio = models.BooleanField(default=False)
+
     qual_beneficio = models.CharField(
         max_length=150,
         blank=True,
         null=True
     )
 
-    documento_foto = models.ImageField(
-        upload_to='documentos/',
+    documento_foto = CloudinaryField(
+        'documento',
         blank=True,
         null=True
     )
@@ -31,7 +31,6 @@ class Beneficiario(models.Model):
     def pode_receber_cesta(self):
         hoje = date.today()
 
-        # total de cestas no ano atual
         total_ano = self.cestas.filter(
             data_concessao__year=hoje.year
         ).count()
@@ -39,7 +38,6 @@ class Beneficiario(models.Model):
         if total_ano >= 3:
             return False, "Já recebeu 3 cestas neste ano."
 
-        # última cesta concedida
         ultima = self.cestas.order_by('-data_concessao').first()
 
         if ultima and ultima.data_concessao.month == hoje.month:
@@ -57,6 +55,7 @@ class Cesta(models.Model):
         on_delete=models.CASCADE,
         related_name='cestas'
     )
+
     data_concessao = models.DateField(auto_now_add=True)
 
     def __str__(self):
