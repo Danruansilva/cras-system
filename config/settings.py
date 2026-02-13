@@ -206,11 +206,15 @@ if DATABASE_URL:
 else:
     # DESENVOLVIMENTO LOCAL (SQLite)
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'cesta',
+        'USER': 'cesta_user',
+        'PASSWORD': 'QfXMhsP7R8vzGBO5samohExNMyvxHfhf',
+        'HOST': 'dpg-d63b33chg0os73cc00ag-a.oregon-postgres.render.com',
+        'PORT': '5432',
     }
+}
 
 
 
@@ -254,23 +258,18 @@ X_FRAME_OPTIONS = "DENY"
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
 
+
 cloudinary.config(
-    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    cloud_name="dczytzq0u",
+    api_key="935546726499912",
+    api_secret="KXy0z5VnXDrsnNPTHhn4pRP4HQ8"
 )
 
-
-
 CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
-    "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET"),
+    'CLOUD_NAME': 'dczytzq0u',
+    'API_KEY': '935546726499912',
+    'API_SECRET': 'KXy0z5VnXDrsnNPTHhn4pRP4HQ8',
 }
 
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-
-
-
-
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
