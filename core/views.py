@@ -110,7 +110,11 @@ def detalhe_beneficiario(request, beneficiario_id):
 
     is_pdf = False
     if beneficiario.documento_foto:
-        is_pdf = beneficiario.documento_foto.name.lower().endswith('.pdf')
+        try:
+            url = beneficiario.documento_foto.url
+            is_pdf = url.lower().endswith('.pdf')
+        except Exception:
+            is_pdf = False
 
     return render(
         request,
