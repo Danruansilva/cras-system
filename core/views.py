@@ -5,9 +5,25 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.db import IntegrityError
 from django.db.models import Count, Max, Q
-from .models import Beneficiario, Cesta
+
+from .models import Beneficiario, Cesta, RequerimentoBeneficio
 
 
+# ===============================
+# LISTA PARA REQUERIMENTO
+# ===============================
+@login_required(login_url='core:login')
+def lista_beneficiarios_requerimento(request):
+    beneficiarios = Beneficiario.objects.all().order_by('nome')
+
+    return render(request, 'core/requerimento_beneficio.html', {
+        'beneficiarios': beneficiarios
+    })
+
+
+# ===============================
+# HOME / LOGIN
+# ===============================
 def home(request):
     if request.user.is_authenticated:
         return redirect('core:dashboard')
@@ -24,6 +40,9 @@ def home(request):
     return render(request, 'core/login.html', {'form': form})
 
 
+# ===============================
+# DASHBOARD
+# ===============================
 @login_required(login_url='core:login')
 def dashboard(request):
     busca = request.GET.get('q', '')
@@ -45,6 +64,9 @@ def dashboard(request):
     })
 
 
+# ===============================
+# CADASTRO
+# ===============================
 @login_required(login_url='core:login')
 def cadastro_beneficiario(request):
     if request.method == 'POST':
@@ -76,6 +98,9 @@ def cadastro_beneficiario(request):
     return render(request, 'core/cadastro.html')
 
 
+# ===============================
+# CONCEDER CESTA
+# ===============================
 @login_required(login_url='core:login')
 def conceder_cesta(request, beneficiario_id):
     if request.method != 'POST':
@@ -94,6 +119,9 @@ def conceder_cesta(request, beneficiario_id):
     return redirect('core:dashboard')
 
 
+# ===============================
+# EXCLUIR
+# ===============================
 @login_required(login_url='core:login')
 def excluir_beneficiario(request, beneficiario_id):
     beneficiario = get_object_or_404(Beneficiario, id=beneficiario_id)
@@ -102,10 +130,12 @@ def excluir_beneficiario(request, beneficiario_id):
     return redirect('core:dashboard')
 
 
+# ===============================
+# DETALHE
+# ===============================
 @login_required(login_url='core:login')
 def detalhe_beneficiario(request, beneficiario_id):
     beneficiario = get_object_or_404(Beneficiario, id=beneficiario_id)
-
     cestas = beneficiario.cestas.order_by('-data_concessao')
 
     is_pdf = False
@@ -127,7 +157,61 @@ def detalhe_beneficiario(request, beneficiario_id):
     )
 
 
+# ===============================
+# REQUERIMENTO SIMPLES
+# ===============================
+@login_required(login_url='core:login')
+def requerimento_beneficio(request):
+    return render(request, 'core/requerimento_beneficio.html')
+
+
+# ===============================
+# VISUALIZAR REQUERIMENTO POR PROTOCOLO
+# ===============================
+@login_required(login_url='core:login')
+def visualizar_requerimento(request, protocolo):
+    requerimento = get_object_or_404(
+        RequerimentoBeneficio,
+        numero_protocolo=protocolo
+    )
+
+    return render(
+        request,
+        'core/requerimento_beneficio.html',
+        {
+            'requerimento': requerimento,
+            'beneficiario': requerimento.beneficiario
+        }
+    )
+
+
+# ===============================
+# LOGOUT
+# ===============================
 @login_required(login_url='core:login')
 def logout_view(request):
     logout(request)
     return redirect('core:home')
+
+
+def novo_requerimento(request, beneficiario_id):
+    beneficiario = get_object_or_404(Beneficiario, id=beneficiario_id)
+
+    if request.method == "POST":
+
+        RequerimentoBeneficio.objects.create(
+            beneficiario=beneficiario,
+            sintese=request.POST.get("sintese"),
+            parecer=request.POST.get("parecer"),
+            visita=request.POST.get("visita"),
+            data_solicitacao=request.POST.get("data_solicitacao"),
+        )
+
+        # ✅ Mensagem de sucesso
+        messages.success(request, "Requerimento salvo com sucesso!")
+
+        return redirect('core:dashboard')
+
+    return render(request, 'core/requerimento_beneficiario.html', {
+        'beneficiario': beneficiario
+    })

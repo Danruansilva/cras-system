@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Requerimento de Benefício Eventual</title>
+
+<style>
+
+@page {
+    size: A4;
+    margin: 20mm;
+}
+
+body {
+    font-family: "Times New Roman", serif;
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 20mm;
+    box-sizing: border-box;
+}
+
+.header-texto {
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+h2 {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.campo {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"] {
+    border: none;
+    border-bottom: 1px solid #000;
+    outline: none;
+    font-family: "Times New Roman", serif;
+    font-size: 14px;
+}
+
+.w-70 { width: 70%; }
+.w-50 { width: 50%; }
+.w-30 { width: 30%; }
+
+textarea {
+    width: 100%;
+    height: 120px;
+    border: 1px solid #000;
+    resize: none;
+    font-family: "Times New Roman", serif;
+    font-size: 14px;
+}
+
+.assinatura {
+    margin-top: 60px;
+    text-align: center;
+}
+
+.linha-assinatura {
+    border-bottom: 1px solid #000;
+    width: 60%;
+    margin: 0 auto 5px auto;
+    height: 30px;
+}
+
+.no-print {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.no-print button,
+.no-print a {
+    padding: 10px 20px;
+    border: none;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.btn-salvar { background-color: #007bff; }
+.btn-voltar { background-color: #6c757d; }
+.btn-imprimir { background-color: #28a745; }
+
+@media print {
+    .no-print {
+        display: none;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header-texto">
+    <strong>Poder Executivo</strong><br>
+    Prefeitura Municipal de Oiapoque<br>
+    Secretaria Municipal de Trabalho e Assistência Social<br>
+    CRAS NOSSA SENHORA DE FÁTIMA
+</div>
+
+<h2>REQUERIMENTO DE BENEFÍCIO EVENTUAL</h2>
+
+<form method="POST">
+{% csrf_token %}
+
+<div class="campo">
+    Nome:
+    <input type="text" name="nome" class="w-70" value="{{ beneficiario.nome }}">
+</div>
+
+<div class="campo">
+    Data de Nascimento:
+    <input type="date" name="data_nascimento" value="{{ beneficiario.data_nascimento|date:'Y-m-d' }}">
+    Idade:
+    <input type="number" name="idade" style="width:60px;">
+    Naturalidade:
+    <input type="text" name="naturalidade" class="w-30">
+</div>
+
+<div class="campo">
+    RG:
+    <input type="text" name="rg" value="{{ beneficiario.rg }}">
+    CPF:
+    <input type="text" name="cpf" value="{{ beneficiario.cpf }}">
+</div>
+
+<div class="campo">
+    Mãe:
+    <input type="text" name="mae" class="w-70" value="{{ beneficiario.nome_mae }}">
+</div>
+
+<div class="campo">
+    Endereço:
+    <input type="text" name="endereco" class="w-50" value="{{ beneficiario.endereco }}">
+    Nº:
+    <input type="text" name="numero" style="width:80px;">
+</div>
+
+<div class="campo">
+    Bairro:
+    <input type="text" name="bairro">
+    Telefone:
+    <input type="text" name="telefone" value="{{ beneficiario.telefone }}">
+</div>
+
+<div class="campo">
+    Número do NIS:
+    <input type="text" name="nis" value="{{ beneficiario.nis }}">
+</div>
+
+<div class="campo">
+    Família usuária do CRAS:
+    <input type="radio" name="cras" value="Sim"> Sim
+    <input type="radio" name="cras" value="Não"> Não
+</div>
+
+<div class="campo">
+    Recebe benefício social:
+    <input type="radio" name="beneficio_social" value="Sim"> Sim
+    <input type="radio" name="beneficio_social" value="Não"> Não
+    Qual?
+    <input type="text" name="qual_beneficio">
+</div>
+
+<br>
+
+<strong>Benefício Solicitado:</strong>
+
+<div class="campo">
+    <input type="checkbox" name="beneficio[]" value="Auxilio Natalidade"> Auxílio Natalidade
+    <input type="checkbox" name="beneficio[]" value="Cesta Basica"> Cesta Básica
+</div>
+
+<div class="campo">
+    <input type="checkbox" name="beneficio[]" value="Auxilio Funeral"> Auxílio Funeral
+    <input type="checkbox" name="beneficio[]" value="Kit Bebe"> Kit Bebê
+</div>
+
+<div class="campo">
+    <input type="checkbox" name="beneficio[]" value="Materiais"> Benefícios Materiais
+    <input type="checkbox" name="beneficio[]" value="Calamidade"> Intempéries / Calamidade Pública
+</div>
+
+<div class="campo">
+    <input type="checkbox" name="beneficio[]" value="Passagem"> Passagem
+    <input type="checkbox" name="beneficio[]" value="Outros"> Outros
+</div>
+
+<br>
+
+<div class="campo">
+    Data da Solicitação:
+    <input type="date" name="data_solicitacao">
+</div>
+
+<br>
+
+<div style="text-align:center; font-weight:bold;">
+    SÍNTESE DA SITUAÇÃO
+</div>
+
+<textarea name="sintese"></textarea>
+
+<br><br>
+
+<div class="campo">
+    Parecer:
+    <input type="radio" name="parecer" value="Deferido"> Deferido
+    <input type="radio" name="parecer" value="Indeferido"> Indeferido
+</div>
+
+<div class="campo">
+    Data do Atendimento:
+    <input type="date" name="data_atendimento">
+</div>
+
+<div class="campo">
+    Visita Domiciliar:
+    <input type="radio" name="visita" value="Sim"> SIM
+    <input type="radio" name="visita" value="Não"> NÃO
+</div>
+
+<div class="assinatura">
+    <div class="linha-assinatura"></div>
+    Assinatura do (a) Beneficiário/Responsável
+</div>
+
+<div class="assinatura">
+    <div class="linha-assinatura"></div>
+    Assinatura do (a) Técnico (a)
+</div>
+
+<!-- BOTÕES -->
+<div class="no-print">
+
+    <button type="submit" class="btn-salvar">
+        Salvar
+    </button>
+
+    <a href="{% url 'core:dashboard' %}" class="btn-voltar">
+        Voltar
+    </a>
+
+    <button type="button" onclick="window.print()" class="btn-imprimir">
+        Imprimir
+    </button>
+
+</div>
+
+</form>
+
+</body>
+</html>

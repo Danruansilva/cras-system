@@ -29,4 +29,16 @@ urlpatterns = [
         views.excluir_beneficiario,
         name='excluir_beneficiario'
     ),
+
+    path(
+        'requerimento-beneficio/',
+        views.requerimento_beneficio,
+        name='requerimento_beneficio'
+    ),
+    path(
+    'requerimento/',
+    views.lista_beneficiarios_requerimento,
+    name='requerimento_beneficio'
+),
+
 ]

@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date
 from cloudinary.models import CloudinaryField
+from django.utils import timezone
 
 
 class Beneficiario(models.Model):
@@ -60,3 +61,20 @@ class Cesta(models.Model):
 
     def __str__(self):
         return f"Cesta - {self.beneficiario.nome} ({self.data_concessao})"
+class RequerimentoBeneficio(models.Model):
+    beneficiario = models.ForeignKey(
+        'Beneficiario',
+        on_delete=models.CASCADE,
+        related_name='requerimentos'
+    )
+
+    numero_protocolo = models.AutoField(primary_key=True)
+    data = models.DateField(default=timezone.now)
+
+    tipo_beneficio = models.CharField(max_length=100)
+    justificativa = models.TextField()
+
+    parecer_tecnico = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Requerimento {self.numero_protocolo}"
