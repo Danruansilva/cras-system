@@ -6,32 +6,33 @@
 
 <style>
 
-/* CONFIGURAÇÃO REAL DE A4 */
+/* CONFIGURAÇÃO A4 PARA IMPRESSÃO */
 @page {
     size: A4 portrait;
     margin: 10mm;
 }
 
-html, body {
-    width: 210mm;
-    height: 297mm;
-    margin: 0;
-    padding: 0;
-}
-
+/* FUNDO DA TELA */
 body {
+    margin: 0;
+    padding: 30px 0;
+    background: #e5e5e5;
+    display: flex;
+    justify-content: center;
     font-family: "Times New Roman", serif;
-    box-sizing: border-box;
+}
+
+/* FOLHA A4 */
+.page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
     padding: 10mm;
+    box-sizing: border-box;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
 }
 
-/* CABEÇALHO */
-.header-texto {
-    text-align: center;
-    font-size: 13px;
-    line-height: 1.3;
-}
-
+/* TÍTULO */
 h2 {
     text-align: center;
     margin: 15px 0;
@@ -79,6 +80,18 @@ textarea {
     height: 25px;
 }
 
+/* IMAGEM TOPO */
+.topo-imagem {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.topo-imagem img {
+    width: 100%;
+    max-height: 140px;
+    object-fit: contain;
+}
+
 /* BOTÕES */
 .no-print {
     text-align: center;
@@ -99,11 +112,19 @@ textarea {
 .btn-voltar { background-color: #6c757d; }
 .btn-imprimir { background-color: #28a745; }
 
-/* CONFIGURAÇÃO DE IMPRESSÃO */
+/* IMPRESSÃO */
 @media print {
 
     body {
-        zoom: 0.92; /* Ajusta para caber exatamente em 1 página */
+        background: white;
+        padding: 0;
+    }
+
+    .page {
+        box-shadow: none;
+        width: 100%;
+        min-height: auto;
+        padding: 10mm;
     }
 
     .no-print {
@@ -113,32 +134,14 @@ textarea {
     textarea {
         height: 90px;
     }
-
-    form {
-        page-break-after: avoid;
-    }
 }
-
-
-.topo-imagem {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.topo-imagem img {
-    width: 100%;
-    max-height: 140px;
-    object-fit: contain;
-}
-
 
 
 </style>
 </head>
 
 <body>
-
+    <div class="page">
     <div class="topo-imagem">
         <img src="https://res.cloudinary.com/dczytzq0u/image/upload/v1771504608/22074509-c0e7-4e7e-8bfc-aa36ad8073dd_l18bgg.jpg" 
              alt="Cabeçalho Oficial">
@@ -283,6 +286,6 @@ textarea {
 </div>
 
 </form>
-
+</div>
 </body>
 </html>
