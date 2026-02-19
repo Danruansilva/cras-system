@@ -17,8 +17,6 @@ body {
     margin: 0;
     padding: 30px 0;
     background: #e5e5e5;
-    display: flex;
-    justify-content: center;
     font-family: "Times New Roman", serif;
 }
 
@@ -30,6 +28,12 @@ body {
     padding: 10mm;
     box-sizing: border-box;
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    margin: 0 auto 30px auto; /* centraliza e separa */
+    page-break-after: always;
+}
+
+.page:last-child {
+    page-break-after: auto;
 }
 
 /* TÍTULO */
@@ -134,6 +138,13 @@ textarea {
     textarea {
         height: 90px;
     }
+}
+.page {
+    page-break-after: always;
+}
+
+.page:last-child {
+    page-break-after: auto;
 }
 
 
@@ -260,7 +271,7 @@ textarea {
 
 <div class="campo">
     Data do Atendimento:
-    <input type="date" name="data_atendimento">
+    <input type="text" name="data_atendimento">
 </div>
 
 <div class="campo">
@@ -278,12 +289,51 @@ textarea {
     <div class="linha-assinatura"></div>
     Assinatura do (a) Técnico (a)
 </div>
+<!-- ================== PÁGINA 2 - RECIBO DE DOAÇÃO ================== -->
+<div class="page">
 
-<div class="no-print">
+    <div class="topo-imagem">
+        <img src="https://res.cloudinary.com/dczytzq0u/image/upload/v1771504608/22074509-c0e7-4e7e-8bfc-aa36ad8073dd_l18bgg.jpg">
+    </div>
+
+    <h2 style="text-align:center; margin:20px 0;">RECIBO DE DOAÇÃO</h2>
+
+    <p style="font-size:16px; line-height:1.8; text-align:justify;">
+        Eu, ________________________________________________,
+        residente na __________________________________________ nº ________,
+        bairro ________________________________________, confirmo que recebi
+        ________________________________________________ da Secretaria Municipal
+        de Trabalho e Assistência Social, através do Centro de Referência da
+        Assistência Social – CRAS Nossa Senhora de Fátima.
+        <br><br>
+        Oiapoque-AP, ____ de ____________ de ______.
+    </p>
+
+    <div style="margin:30px 0;">
+        <div style="border-bottom:1px solid #000; height:20px; margin-bottom:15px;"></div>
+        <div style="border-bottom:1px solid #000; height:20px; margin-bottom:15px;"></div>
+        <div style="border-bottom:1px solid #000; height:20px; margin-bottom:15px;"></div>
+        <div style="border-bottom:1px solid #000; height:20px; margin-bottom:15px;"></div>
+        <div style="border-bottom:1px solid #000; height:20px;"></div>
+    </div>
+
+    <div style="margin-top:60px; text-align:center;">
+        <div style="width:60%; margin:0 auto; border-bottom:1px solid #000; height:25px;"></div>
+        <p>Assinatura do(a) Beneficiário(a)</p>
+    </div>
+
+    <div style="margin-top:40px; text-align:center;">
+        <div style="width:60%; margin:0 auto; border-bottom:1px solid #000; height:25px;"></div>
+        <p>Assinatura do(a) Técnico(a)</p>
+    </div><div class="no-print">
     <button type="submit" class="btn-salvar">Salvar</button>
     <a href="{% url 'core:dashboard' %}" class="btn-voltar">Voltar</a>
     <button type="button" onclick="window.print()" class="btn-imprimir">Imprimir</button>
 </div>
+
+</div>
+
+
 
 </form>
 </div>
